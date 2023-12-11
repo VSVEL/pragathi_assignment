@@ -4,21 +4,54 @@ import 'dart:isolate';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:prag_assignment/components/grid_view_comp.dart';
 import 'package:prag_assignment/pages/notification_screen.dart';
 import 'package:prag_assignment/services/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
+
+
+  void getData() async {
+    MqttServerClient  client = MqttServerClient('142.132.163.51','mqttx_ca175ac0');
+    try {
+      await client.connect();
+      print('inside');
+      client.subscribe('data/#', MqttQos.atLeastOnce);
+      print('1');
+      client.updates.listen((List<MqttReceivedMessage<MqttMessage>> data) {
+        final MqttPublishMessage recMess = data[0].payload as MqttPublishMessage;
+        final String payload = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+        print('Payload: $payload');
+      });
+    } catch (e) {
+      print('Error connecting to MQTT broker: $e');
+    }
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    getData();
 
     return SafeArea(
       child: Scaffold(
@@ -54,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({key});
 
   @override
   Widget build(BuildContext context) {
@@ -162,11 +195,11 @@ class HomePage extends StatelessWidget {
                       crossAxisCount: 2, childAspectRatio: 0.5),
                   itemCount: 6,
                   itemBuilder: (context, index) {
-                    return GridImage(
-                      image: 'images/trending.png',
-                      height: 88,
-                      width: 254,
-                    );
+                    // return GridImage(
+                    //   image: 'images/trending.png',
+                    //   height: 88,
+                    //   width: 254,
+                    // );
                   },
                 ),
               ),
@@ -216,12 +249,12 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: GridImage(
-                        image: 'images/nearby_stores.png',
-                        height: 120,
-                        width: 383,
-                      ),
-                    );
+                    //   child: GridImage(
+                    //     image: 'images/nearby_stores.png',
+                    //     height: 120,
+                    //     width: 383,
+                    //   ),
+                     );
                   },
                 ),
               ),
@@ -280,3 +313,6 @@ final List<Widget> image2Sliders = [
           ),
         ))
     .toList();
+
+
+

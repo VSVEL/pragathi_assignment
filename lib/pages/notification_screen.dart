@@ -6,7 +6,7 @@ import '../components/notification_card.dart';
 import '../services/api_endpoints.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+  const NotificationScreen({key});
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -71,12 +71,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
                   final notification = notifications[index];
-                  return NotificationWidget(
-                    imageUrl: notification['image'],
-                    title: notification['title'],
-                    body: notification['body'],
-                    date: DateTime.parse(notification['timestamp']),
-                  );
+                  // return NotificationWidget(
+                  //   imageUrl: notification['image'],
+                  //   title: notification['title'],
+                  //   body: notification['body'],
+                  //   date: DateTime.parse(notification['timestamp']),
+                  // );
                 },
               ),
       ),
